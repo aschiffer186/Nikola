@@ -5,11 +5,12 @@
 #################################################################################################################################
 #################################################################################################################################
 ### Tokens
+# Units: 1_m2_s_2
 # Numeric literals
 integer-literal ::= [0-9]+([eE][+-]?[0-9]+)(integer-suffx)?(unit-suffix)?
 integer-suffix ::= [lL]|[sS][bB]|([lL][lL])
 real-literal ::= [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?(unit-suffix)?
-unit-suffix ::== _[a-zA-Z]+(^-?[0-9]+)?(-[a-zA-Z]+(^-?[0-9]+))*
+unit-suffix ::== _[a-zA-Z]+(_?[0-9]+)?(_[a-zA-Z]+(_?[0-9]+))*
 complex-literal ::=  (real-iteral)[iI](unit-suffix)?
 
 # Character-based literals
