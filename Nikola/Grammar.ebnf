@@ -4,9 +4,17 @@
 # Syntax will be indicated using a modified-EBNF grammar.
 #################################################################################################################################
 #################################################################################################################################
-# Tokens
+### Tokens
+# Numeric literals
 integer-literal ::= [0-9]+([eE][+-]?[0-9]+)(integer-suffx)?(unit-suffix)?
 integer-suffix ::= [lL]|[sS][bB]|([lL][lL])
 real-literal ::= [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?(unit-suffix)?
 unit-suffix ::== _[a-zA-Z]+(^-?[0-9]+)?(-[a-zA-Z]+(^-?[0-9]+))*
 complex-literal ::=  (real-iteral)[iI](unit-suffix)?
+
+# Character-based literals
+char-literal ::= '\\?[any ASCII character]'
+string-literal ::= "(\\?[any ASCII character])*"
+
+# Identifies
+identifier ::= [_a-zA-Z][-_a-zA-Z]*
