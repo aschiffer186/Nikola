@@ -1,2 +1,8 @@
 # Ignore VS Code specific files
 .vscode/*
+
+# Doxygen generated files
+doc/*
+
+# Build files
+build/*

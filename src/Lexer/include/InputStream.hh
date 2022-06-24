@@ -5,7 +5,7 @@
 #include <iterator>
 #include <string>
 
-namespace Nikola::FrontEnd::Lexer
+namespace Nikola::FrontEnd::Lexer::_detail
 {
     /**
      * @brief Abstraction of a Nikola input source
@@ -25,7 +25,7 @@ namespace Nikola::FrontEnd::Lexer
     private:
         using PosType = typename Traits::off_type;
     public:
-        static constexpr _CharTp NIKOLA_EOF = Traits::();
+        static constexpr _CharTp NIKOLA_EOF = Traits::eof();
     public:
         /**
          * @brief Construct a new Input Stream object
@@ -112,15 +112,27 @@ namespace Nikola::FrontEnd::Lexer
             return M_line;
         }
     private:
-        void advance();
+        //Implementation of operator++()
+        void advance()
+        {
+            while(true)
+            {
+                if (M_iter == END)
+                    return;
+                ++M_iter;
+                ++M_col;
+                if (*M_iter == '\n')
+                {
+                    M_col = 1;
+                    ++M_line;
+                    ++M_iter;
+                }
+                if (!isspace(M_iter))
+                    return;
+            }
+        }
     private:
-        template<typename _Tp, typename _Traits = std::char_traits<_Tp>>
-        friend bool operator==(const InputStream<_Tp, _Traits>& lhs, const InputStream<_Tp, _Traits>& rhs);
-        
-        template<typename _Tp, typename _Traits = std::char_traits<_Tp>>
-        friend bool operator!=(const InputStream<_Tp, _Traits>& lhs, const InputStream<_Tp, _Traits>& rhs);
-    private:
-        static const std::istreambuf_iterator<_CharTp, Traits> END;
+        static constexpr std::istreambuf_iterator<_CharTp, Traits> END{};
     private:
         std::istreambuf_iterator<_CharTp, Traits> M_iter;
         PosType M_line;
