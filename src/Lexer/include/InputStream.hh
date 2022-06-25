@@ -5,6 +5,9 @@
 #include <iterator>
 #include <string>
 
+///@file InputStream.hh
+///Handles processing input to the Nikola compiler
+
 namespace Nikola::FrontEnd::Lexer::_detail
 {
     /**
