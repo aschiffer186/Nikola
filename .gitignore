@@ -5,9 +5,5 @@
 doc/*
 
 # Build files
-<<<<<<< HEAD
-build/*
-=======
 build/*
 build\_deps\googletest-src\googletest\test\gtest_skip_environment_check_output_test.py
->>>>>>> a517f7f0d769665e7d97514914140a732ecf50e7

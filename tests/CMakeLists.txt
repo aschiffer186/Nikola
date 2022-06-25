@@ -1,5 +1,3 @@
-enable_testing()
-
 #Set up Google Test
 include(FetchContent)
 FetchContent_Declare(
@@ -23,5 +21,5 @@ SET(CXX_TEST_OPTIONS
     "-Wstrict-overflow=5"
     "-pedantic"
     )
-
+enable_testing()
 add_subdirectory("Lexer Tests")

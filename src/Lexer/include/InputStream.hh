@@ -36,8 +36,8 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * @pre the inputStream is open and non in an error-state
          * @param inputStream the input stream to be encapsulated by *this
          */
-        explicit InputStream(std::basic_istream<_CharTp, Traits>& inputStream)
-        : M_iter{inputStream.rdbuf()}, M_line{1}, M_col{1}
+        explicit InputStream(const std::basic_istream<_CharTp, Traits>& inputStream)
+        : M_buff{inputStream.rdbuf()}, M_iter{inputStream.rdbuf()}, M_line{1}, M_col{1}
         {
 
         }
@@ -80,12 +80,11 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * 
          * @return _CharTp the lookahead character
          */
-        _CharTp lookahead() const
+        _CharTp lookahead()
         {
-            auto it = std::next(M_iter);
-            if (it == END)
-                return NIKOLA_EOF;
-            return *it;
+            _CharTp c = M_buff->snextc();
+            M_buff->sungetc();
+            return c;
         }
 
         /**
@@ -127,17 +126,23 @@ namespace Nikola::FrontEnd::Lexer::_detail
                     ++M_line;
                     ++M_iter;
                 }
-                if (!isspace(M_iter))
+                if (!isspace(*M_iter))
                     return;
             }
         }
     private:
         static constexpr std::istreambuf_iterator<_CharTp, Traits> END{};
     private:
+        std::basic_streambuf<_CharTp, Traits> *M_buff;
         std::istreambuf_iterator<_CharTp, Traits> M_iter;
         PosType M_line;
         PosType M_col;
     };
+
+    template<typename _CharTp, typename _Traits>
+        InputStream(std::basic_istream<_CharTp, _Traits>& in) -> 
+            InputStream<typename std::basic_istream<_CharTp, _Traits>::char_type, 
+                typename std::basic_istream<_CharTp, _Traits>::traits_type>;
 }
 
 #endif
