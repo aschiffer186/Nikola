@@ -22,7 +22,7 @@ TEST(TestLexer, TestBasicIteration)
     }
 
     ++is;
-    EXPECT_EQ(*is, NIS::InputStream<char>::NIKOLA_EOF);
+    EXPECT_EQ(*is, NIS::InputStream::NIKOLA_EOF);
     EXPECT_EQ(is.getCol(), test.length() + 1);
     EXPECT_EQ(is.getLine(), 1);
 }
@@ -53,7 +53,7 @@ TEST(TestLexer, TestSpaceHandling)
     ++is;
     ++is;
     ++is;
-    EXPECT_EQ(*is, NIS::InputStream<char>::NIKOLA_EOF);
+    EXPECT_EQ(*is, NIS::InputStream::NIKOLA_EOF);
     EXPECT_EQ(is.getCol(), test.length() + 1);
     EXPECT_EQ(is.getLine(), 1);
 }
@@ -69,7 +69,7 @@ TEST(TestLexer, TestLookaheadChar)
     EXPECT_EQ(*is, 'a');
 
     ++is;
-    EXPECT_EQ(is.lookahead(), NIS::InputStream<char>::NIKOLA_EOF);
+    EXPECT_EQ(is.lookahead(), NIS::InputStream::NIKOLA_EOF);
     EXPECT_EQ(*is, 'b');
 }
 
@@ -100,7 +100,7 @@ TEST(TestLexer, TestFileInput)
     EXPECT_EQ(is.getCol(), 2);
     EXPECT_EQ(is.getLine(), 2);
     ++is;
-    EXPECT_EQ(*is, NIS::InputStream<char>::NIKOLA_EOF);
+    EXPECT_EQ(*is, NIS::InputStream::NIKOLA_EOF);
     EXPECT_EQ(is.getCol(), 2);
     EXPECT_EQ(is.getLine(), 3);
 }

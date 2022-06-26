@@ -4,5 +4,6 @@ set(LEXER_INCLUDE_DIR ${LEXER_SOURCE_DIR}/include)
 add_library(Lexer
             "include/InputStream.hh"
             "include/LexerTokens.hh"
+            "InputStream.cpp"
             "LexerTokens.cpp")
 target_include_directories(Lexer PUBLIC ${LEXER_INCLUDE_DIR})

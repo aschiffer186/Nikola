@@ -19,16 +19,13 @@ namespace Nikola::FrontEnd::Lexer::_detail
      * access the next character safely, and obtain information about the position 
      * within the character stream.
      * 
-     * @tparam _CharTp the character type stored in the input stream
-     * @tparam Traits the traits type for _CharTpS
      */
-    template<typename _CharTp, typename Traits = std::char_traits<_CharTp>>
     class InputStream 
     {
     private:
-        using PosType = typename Traits::off_type;
+        using PosType = std::char_traits<char>::off_type;
     public:
-        static constexpr _CharTp NIKOLA_EOF = Traits::eof();
+        static constexpr char NIKOLA_EOF = std::char_traits<char>::eof();
     public:
         /**
          * @brief Construct a new Input Stream object
@@ -39,11 +36,7 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * @pre the inputStream is open and non in an error-state
          * @param inputStream the input stream to be encapsulated by *this
          */
-        explicit InputStream(const std::basic_istream<_CharTp, Traits>& inputStream)
-        : M_buff{inputStream.rdbuf()}, M_iter{inputStream.rdbuf()}, M_line{1}, M_col{1}
-        {
-
-        }
+        explicit InputStream(const std::istream& inputStream);
 
         /**
          * @brief Returns the current character
@@ -53,12 +46,7 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * 
          * @return _CharTp the current character
          */
-        _CharTp operator*()
-        {
-            if (M_iter == END)
-                return NIKOLA_EOF;
-            return *M_iter;
-        }
+        char operator*();
 
         /**
          * @brief Advances the position in the input stream
@@ -69,11 +57,7 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * 
          * @return InputStream& 
          */
-        InputStream& operator++()
-        {
-            advance();
-            return *this;
-        }
+        InputStream& operator++();
 
         /**
          * @brief Returns the lookahead character
@@ -83,12 +67,7 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * 
          * @return _CharTp the lookahead character
          */
-        _CharTp lookahead()
-        {
-            _CharTp c = M_buff->snextc();
-            M_buff->sungetc();
-            return c;
-        }
+        char lookahead();
 
         /**
          * @brief Returns the current column
@@ -97,10 +76,7 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * 
          * @return PosType the current column 
          */
-        constexpr PosType getCol() const
-        {
-            return M_col;
-        }
+        PosType getCol() const;
 
         /**
          * @brief Returns the current line
@@ -109,43 +85,18 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * 
          * @return PosType the current line
          */
-        constexpr PosType getLine() const 
-        {
-            return M_line;
-        }
+        PosType getLine() const;
     private:
         //Implementation of operator++()
-        void advance()
-        {
-            while(true)
-            {
-                if (M_iter == END)
-                    return;
-                ++M_iter;
-                ++M_col;
-                if (*M_iter == '\n')
-                {
-                    M_col = 1;
-                    ++M_line;
-                    ++M_iter;
-                }
-                if (!isspace(*M_iter))
-                    return;
-            }
-        }
+        void advance();
     private:
-        static constexpr std::istreambuf_iterator<_CharTp, Traits> END{};
+        static constexpr std::istreambuf_iterator<char, std::char_traits<char>> END{};
     private:
-        std::basic_streambuf<_CharTp, Traits> *M_buff;
-        std::istreambuf_iterator<_CharTp, Traits> M_iter;
+        std::basic_streambuf<char, std::char_traits<char>> *M_buff;
+        std::istreambuf_iterator<char, std::char_traits<char>> M_iter;
         PosType M_line;
         PosType M_col;
     };
-
-    template<typename _CharTp, typename _Traits>
-        InputStream(std::basic_istream<_CharTp, _Traits>& in) -> 
-            InputStream<typename std::basic_istream<_CharTp, _Traits>::char_type, 
-                typename std::basic_istream<_CharTp, _Traits>::traits_type>;
 }
 
 #endif
