@@ -33,9 +33,9 @@ namespace Nikola::FrontEnd::Lexer
 
     struct NikolaToken
     {
-        int line;
         int startCol;
         int endCol;
+        int line;
         NikolaTokenKind kind;
         std::string value;
     };
