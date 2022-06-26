@@ -26,11 +26,3 @@
               may not be modified)
     let foo : bar[] const # foo is a const array of bar (the array may not be modified, but the elements 
               in it can)
-
-export let class foo : template<type T>;
-export let class foo(int);
-
-let foo : int[] const
-let potato : int const ref[];
-let bar : int const ref;
-let baz : int ref const;
