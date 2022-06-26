@@ -14,5 +14,23 @@
 
 - Nikola uses a separation compilation model where a module represents a translation unit
 
+- Types in Nikola are read right to left 
+- Example 
+    let foo : int # foo is an integer 
+    let foo : int const # foo is a constant integer 
+    let foo : int const ref # foo is reference to constant integer (the reference may change,
+              but the object referred to cannot
+    let foo : int ref const # foo is a constant reference to integer (the reference may not change, 
+              but the underlying object cannot)
+    let foo : bar const[] # foo is an array of constant bar (the array may be modified but the elements
+              may not be modified)
+    let foo : bar[] const # foo is a const array of bar (the array may not be modified, but the elements 
+              in it can)
+
 export let class foo : template<type T>;
 export let class foo(int);
+
+let foo : int[] const
+let potato : int const ref[];
+let bar : int const ref;
+let baz : int ref const;
