@@ -19,7 +19,7 @@ namespace Nikola::FrontEnd::Lexer
     private:
        _detail::InputStream M_input_stream;
     private:
-        enum State_Machine_State 
+        enum StateMachineState 
         {
             ERROR,
             START,
@@ -27,7 +27,16 @@ namespace Nikola::FrontEnd::Lexer
             INTEGER_SUFFIX,
             LONG_LONG_INTEGER_SUFFIX,
             UNIT_SUFFIX_BEGIN,
-            UNIT_SUFFIX
+            UNIT_SUFFIX_UNIT,
+            UNIT_SUFFIX_EXPONENT,
+            UNIT_SUFFIX_NEGATIVE_EXPONENT
+        };
+
+        enum class NumericLiteralType
+        {
+            INTEGER,
+            REAL,
+            COMPLEX
         };
     }; 
 } // namespace Nikola::FrontEnd::Lexer

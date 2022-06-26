@@ -5,7 +5,6 @@
         state = newState;\
         ++M_input_stream;\
         tokenValue += c;\
-        break;\
     }
 
 #define ACCEPT(tokenKind)\
@@ -34,6 +33,8 @@ namespace Nikola::FrontEnd::Lexer
         int state = START;
         std::string tokenValue;
         char c;
+        NumericLiteralType literalType;
+
         while(true)
         {
             c = *M_input_stream;
@@ -71,8 +72,10 @@ namespace Nikola::FrontEnd::Lexer
                     {
                         TRANSITION(UNIT_SUFFIX_BEGIN);
                     }
-                    
-                    ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                    else 
+                    {
+                        ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                    }
                 }
                 break;
                 case INTEGER_SUFFIX:
@@ -89,7 +92,10 @@ namespace Nikola::FrontEnd::Lexer
                     {
                         TRANSITION(UNIT_SUFFIX_BEGIN);
                     }
-                    ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                    else 
+                    {
+                        ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                    }
                 }
                 break;
                 case LONG_LONG_INTEGER_SUFFIX:
@@ -99,13 +105,75 @@ namespace Nikola::FrontEnd::Lexer
                     {
                         TRANSITION(UNIT_SUFFIX_BEGIN);
                     }
-                    ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                    else 
+                    {
+                        ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                    }
                 }
                 break;
                 case UNIT_SUFFIX_BEGIN:
                 {
                     char lookahead = tolower(M_input_stream.lookahead());
                     if (!isalpha(lookahead))
+                    {
+                        TRANSITION(ERROR);
+                    }
+                    TRANSITION(UNIT_SUFFIX_UNIT);
+                }
+                break;
+                case UNIT_SUFFIX_UNIT:
+                {
+                    char lookahead = tolower(M_input_stream.lookahead());
+                    if (isdigit(lookahead))
+                    {
+                        TRANSITION(UNIT_SUFFIX_EXPONENT);
+                    }
+                    else if (lookahead == '_')
+                    {
+                        TRANSITION(UNIT_SUFFIX_NEGATIVE_EXPONENT);
+                    }
+                    else 
+                    {
+                        if (literalType == NumericLiteralType::INTEGER)
+                        {
+                            ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                        }
+                        else if (literalType == NumericLiteralType::REAL)
+                        {
+                            ACCEPT(NikolaTokenKind::NikolaRealLiteral);
+                        }
+                        else
+                        {
+                            ACCEPT(NikolaTokenKind::NikolaComplexLiteral);
+                        }
+                    }
+                }
+                break;
+                case UNIT_SUFFIX_EXPONENT:
+                {
+                    char lookahead = tolower(M_input_stream.lookahead());
+                    if (isdigit(lookahead))
+                    {
+                        TRANSITION(UNIT_SUFFIX_EXPONENT);
+                    }
+                    else if (lookahead == '_')
+                    {
+                        TRANSITION(UNIT_SUFFIX_BEGIN);
+                    }
+
+                }
+                case UNIT_SUFFIX_NEGATIVE_EXPONENT:
+                {
+                    char lookahead = tolower(M_input_stream.lookahead());
+                    if (isdigit(lookahead))
+                    {
+                        TRANSITION(UNIT_SUFFIX_UNIT);
+                    }
+                    else if (isalpha(lookahead))
+                    {
+                        TRANSITION(UNIT_SUFFIX_UNIT);
+                    }
+                    else 
                     {
                         TRANSITION(ERROR);
                     }
