@@ -19,3 +19,46 @@ string-literal ::= "(\\?[any ASCII character])*"
 
 # Identifies
 identifier ::= [_a-zA-Z][-_a-zA-Z]*
+
+#################################################################################################################################
+### Syntax
+
+# Top-Level
+Nikola-program ::= {declaration}
+declaration ::=
+      module-declaration 
+    | import-declaration
+    | namespace-declaration 
+    | class-declaration
+    | enum-declaration
+    | function-declaration
+    | alias-declaration
+    | typedef-declaration
+    | variable-declaration # Note: global variables may only be constants
+member-declaration ::= 
+      class-declaration 
+    | enum-declaration
+    | function-declaration
+    | alias-declaration 
+    | variable-declaration
+scoped-declaration ::=
+      function-declaration
+    | alias-declaration 
+    | variable-declaration
+
+# Declaration definitions
+module-declaration ::= "module" module-name ";"
+module-name ::= identifier {. identifier}
+
+import-declaration ::= ["export"] import-statement 
+import-statement ::=
+    "import" module-name ";"
+    "import" module-name "with" module-name ";"
+    "import" module-name "as" identifier ";"
+
+namespace-declaration ::= "namespace" namespace-identifier "{" {declaration} "}"
+namespace-identifier ::= identifier {:: identifier}
+
+class-declaration ::= class-preamble [class-definition] ";"
+class-preamble ::= ["export"] "let" "class" identifier template-specialization [":" template-declaration]
+class-definition ::= "{" {member-declaration} "}"

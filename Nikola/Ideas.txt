@@ -1,0 +1,28 @@
+- First-class support for quantities with units
+    - The fundamental type to support units is the quantity
+    - Numeric literals may have optional unit suffixes whose type is a quantity with the specified units
+    - The results of operations on quantities will have to correct units 
+    - Strong type checking is performed; operations on quantities must have compatabile units
+        - Assigning a quantity to a variable requires that the units be compatable as well
+    - All commonly used units are predefined 
+    - It is possible to obtain the magnitude and units of a quantity
+
+    Examples
+        1. let dist = 1_m;
+        2. dist += 5_m 
+        3. let speed = dist / 6_s; //Speed is equal to 1 m/s
+
+- Nikola uses a separation compilation model where a module represents a translation unit
+
+- Types in Nikola are read right to left 
+- Example 
+    let foo : int # foo is an integer 
+    let foo : int const # foo is a constant integer 
+    let foo : int const ref # foo is reference to constant integer (the reference may change,
+              but the object referred to cannot
+    let foo : int ref const # foo is a constant reference to integer (the reference may not change, 
+              but the underlying object cannot)
+    let foo : bar const[] # foo is an array of constant bar (the array may be modified but the elements
+              may not be modified)
+    let foo : bar[] const # foo is a const array of bar (the array may not be modified, but the elements 
+              in it can)
