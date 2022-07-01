@@ -26,3 +26,53 @@
               may not be modified)
     let foo : bar[] const # foo is a const array of bar (the array may not be modified, but the elements 
               in it can)
+    
+module foo;
+import bar as b;
+
+namespace foo::baz 
+{
+    export let class Foo : template<type T>
+    {
+        let bz(i : T[]) -> real = {
+
+        };
+    };
+}
+
+Nikola-program
+    declaration 
+        module-declaration
+            module-name 
+                identifier
+                    "foo"
+        import-declaration
+            module-name 
+                "bar"
+            identifier
+                "b"
+        namespace-declaration 
+            namespace-identifier
+                identifier 
+                    "foo"
+                identifier
+                    "baz"
+            declaration
+                class-declaration 
+                    class-preamble
+                        identifier
+                            "Foo" 
+                        template-declaration
+                    class-definition
+                        member-declaration 
+                            function-declaration 
+                                function-preamble
+                                    identifier 
+                                    function-arg-declaration-list 
+                                        function-arg-declaration
+                                            identifier 
+                                                "i"
+                                            "type
+                                    return-type-list 
+                                        type
+                            function-definition

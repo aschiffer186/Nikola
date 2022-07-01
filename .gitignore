@@ -7,3 +7,8 @@ doc/*
 # Build files
 build/*
 build\_deps\googletest-src\googletest\test\gtest_skip_environment_check_output_test.py
+<<<<<<< HEAD
+=======
+
+Nikola/Standard Library Ideas.txt
+>>>>>>> Standard

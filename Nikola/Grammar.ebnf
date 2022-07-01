@@ -59,6 +59,17 @@ import-statement ::=
 namespace-declaration ::= "namespace" namespace-identifier "{" {declaration} "}"
 namespace-identifier ::= identifier {:: identifier}
 
-class-declaration ::= class-preamble [class-definition] ";"
+class-declaration ::= class-preamble [class-definition] ";" 
 class-preamble ::= ["export"] "let" "class" identifier template-specialization [":" template-declaration]
 class-definition ::= "{" {member-declaration} "}"
+
+enum
+
+function-declaration ::= (function-preamble | operator-preamble) [":" template-declaration] [function-definition] ";"
+function-preamble ::= ["export"] "let" identifier "(" [function-arg-declaration-list] ")" ["->" return-type-list]
+operator-preamble ::= ["export"] "let" "operator" operator "(" {function-arg-declaration} ")" ["->" return-type-list] 
+function-arg-declaration-list ::= function-arg-declaration {"," function-arg-declaration}
+function-arg-declaration ::= identifier [":" type ["..."]]
+return-type-list ::= type {"," type}
+function-definition ::= "=" "{" {scoped-declaration} "}"
+
