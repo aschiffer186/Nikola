@@ -57,7 +57,7 @@ namespace Nikola::FrontEnd::Lexer
                     } 
                     else if (c == '.')
                     {
-
+                        TRANSITION(PERIOD)
                     }
                     else if (c == '\'') 
                     {
@@ -85,6 +85,10 @@ namespace Nikola::FrontEnd::Lexer
                     else if (lookahead == '_')
                     {
                         TRANSITION(UNIT_SUFFIX_BEGIN);
+                    }
+                    else if (lookahead == '.')
+                    {
+                        TRANSITION(PERIOD);
                     }
                     else 
                     {
@@ -125,6 +129,37 @@ namespace Nikola::FrontEnd::Lexer
                     else 
                     {
                         ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                    }
+                }
+                break;
+                case PERIOD:
+                {
+                    char lookahead = tolower(M_input_stream.lookahead());
+                    if (isdigit(lookahead))
+                    {
+                        TRANSITION(REAL_LITERAL);
+                        literalType = NumericLiteralType::REAL;
+                    }
+                }
+                break;
+                case REAL_LITERAL:
+                {
+                    char lookahead = tolower(M_input_stream.lookahead());
+                    if (isdigit(lookahead))
+                    {
+                        TRANSITION(REAL_LITERAL);
+                    }
+                    else if (lookahead == '_')
+                    {
+                        TRANSITION(UNIT_SUFFIX_BEGIN);
+                    }
+                    else if (lookahead == 'e')
+                    {
+                        TRANSITION(REAL_LITERAL_EXPONENT_BEGIN);
+                    }
+                    else 
+                    {
+                        ACCEPT(NikolaTokenKind::NikolaRealLiteral);
                     }
                 }
                 break;

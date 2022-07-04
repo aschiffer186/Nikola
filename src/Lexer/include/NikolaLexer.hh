@@ -29,7 +29,11 @@ namespace Nikola::FrontEnd::Lexer
             UNIT_SUFFIX_BEGIN,
             UNIT_SUFFIX_UNIT,
             UNIT_SUFFIX_EXPONENT,
-            UNIT_SUFFIX_NEGATIVE_EXPONENT
+            UNIT_SUFFIX_NEGATIVE_EXPONENT,
+            PERIOD,
+            REAL_LITERAL,
+            REAL_LITERAL_EXPONENT_BEGIN,
+            REAL_LITERAL_EXPONENT
         };
 
         enum class NumericLiteralType
