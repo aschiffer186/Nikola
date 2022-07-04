@@ -63,7 +63,9 @@ class-declaration ::= class-preamble [class-definition] ";"
 class-preamble ::= ["export"] "let" "class" identifier template-specialization [":" template-declaration]
 class-definition ::= "{" {member-declaration} "}"
 
-enum
+enum-declaration ::= enum-preamble enum-definition ";"
+enum-prenum ::= "let" "enum" identifier "="
+enum-definition ::= "{" variable-declaration {, variable-declaration} "}""
 
 function-declaration ::= (function-preamble | operator-preamble) [":" template-declaration] [function-definition] ";"
 function-preamble ::= ["export"] "let" identifier "(" [function-arg-declaration-list] ")" ["->" return-type-list]
