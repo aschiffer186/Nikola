@@ -1,4 +1,5 @@
 #include "LexerTokens.hh"
+#include "InputStream.hh"
 
 namespace Nikola::FrontEnd::Lexer 
 {

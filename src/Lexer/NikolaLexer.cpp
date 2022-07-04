@@ -10,8 +10,9 @@
 #define ACCEPT(tokenKind)\
     do\
     {\
-    NikolaToken token{.startCol = M_input_stream.getCol() - tokenValue.length(),\
-                                    .endCol = M_input_stream.getCol() - 1,\
+    tokenValue += c;\
+    NikolaToken token{.startCol = M_input_stream.getCol() - tokenValue.length() + 1,\
+                                    .endCol = M_input_stream.getCol(),\
                                     .line = M_input_stream.getLine(),\
                                     .kind = tokenKind,\
                                     .value = tokenValue};\
@@ -39,6 +40,13 @@ namespace Nikola::FrontEnd::Lexer
         {
             c = *M_input_stream;
             if (state == START && c == _detail::InputStream::NIKOLA_EOF)
+            {
+                return NikolaToken{.startCol = M_input_stream.getCol(), 
+                                   .endCol = M_input_stream.getCol(),
+                                   .line = M_input_stream.getLine(),
+                                   .kind = NikolaTokenKind::NikolaEOF};
+            }
+
             switch(state)
             {
                 case START:
@@ -47,6 +55,10 @@ namespace Nikola::FrontEnd::Lexer
                     {
                         TRANSITION(DIGIT);
                     } 
+                    else if (c == '.')
+                    {
+
+                    }
                     else if (c == '\'') 
                     {
 
@@ -60,8 +72,10 @@ namespace Nikola::FrontEnd::Lexer
                 case DIGIT:
                 {
                     char lookahead = M_input_stream.lookahead();
+
                     if (isdigit(lookahead))
                     {
+                        literalType = NumericLiteralType::INTEGER;
                         TRANSITION(DIGIT);
                     }
                     else if (isalpha(lookahead))
@@ -81,8 +95,11 @@ namespace Nikola::FrontEnd::Lexer
                 case INTEGER_SUFFIX:
                 {
                     char curr = tolower(c);
-                    if (curr != 'l' && curr != 's' && curr != 'b')
+                    if (curr != 'l' && curr != 's' && curr != 'b' && curr != 'f')
+                    {
                         TRANSITION(ERROR);
+                    }
+
                     char lookahead = tolower(M_input_stream.lookahead());
                     if (lookahead == 'l')
                     {
@@ -128,6 +145,10 @@ namespace Nikola::FrontEnd::Lexer
                     {
                         TRANSITION(UNIT_SUFFIX_EXPONENT);
                     }
+                    else if (isalpha(lookahead))
+                    {
+                        TRANSITION(UNIT_SUFFIX_UNIT);
+                    }
                     else if (lookahead == '_')
                     {
                         TRANSITION(UNIT_SUFFIX_NEGATIVE_EXPONENT);
@@ -160,14 +181,28 @@ namespace Nikola::FrontEnd::Lexer
                     {
                         TRANSITION(UNIT_SUFFIX_BEGIN);
                     }
-
+                    else 
+                    {
+                        if (literalType == NumericLiteralType::INTEGER)
+                        {
+                            ACCEPT(NikolaTokenKind::NikolaIntegerLiteral);
+                        }
+                        else if (literalType == NumericLiteralType::REAL)
+                        {
+                            ACCEPT(NikolaTokenKind::NikolaRealLiteral);
+                        }
+                        else
+                        {
+                            ACCEPT(NikolaTokenKind::NikolaComplexLiteral);
+                        }
+                    }
                 }
                 case UNIT_SUFFIX_NEGATIVE_EXPONENT:
                 {
                     char lookahead = tolower(M_input_stream.lookahead());
                     if (isdigit(lookahead))
                     {
-                        TRANSITION(UNIT_SUFFIX_UNIT);
+                        TRANSITION(UNIT_SUFFIX_NEGATIVE_EXPONENT);
                     }
                     else if (isalpha(lookahead))
                     {

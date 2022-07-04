@@ -5,6 +5,7 @@
 #include <ostream>
 #include <string>
 
+#include "InputStream.hh"
 
 namespace Nikola::FrontEnd::Lexer
 {
@@ -33,11 +34,11 @@ namespace Nikola::FrontEnd::Lexer
 
     struct NikolaToken
     {
-        int startCol;
-        int endCol;
-        int line;
+        _detail::InputStream::PosType startCol;
+        _detail::InputStream::PosType endCol;
+        _detail::InputStream::PosType line;
         NikolaTokenKind kind;
-        std::string value;
+        std::string value = "";
     };
 
     std::ostream& operator<<(std::ostream& os, const NikolaToken& tok);

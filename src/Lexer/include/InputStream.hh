@@ -4,6 +4,7 @@
 #include <istream>
 #include <iterator>
 #include <string>
+#include <type_traits>
 
 ///@file InputStream.hh
 ///Handles processing input to the Nikola compiler
@@ -22,8 +23,8 @@ namespace Nikola::FrontEnd::Lexer::_detail
      */
     class InputStream 
     {
-    private:
-        using PosType = std::char_traits<char>::off_type;
+    public:
+        using PosType = std::make_unsigned_t<std::char_traits<char>::off_type>;
     public:
         static constexpr char NIKOLA_EOF = std::char_traits<char>::eof();
     public:
