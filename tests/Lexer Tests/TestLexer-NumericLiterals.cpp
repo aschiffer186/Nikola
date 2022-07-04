@@ -148,6 +148,26 @@ TEST(TestLexer, TestLexInputUnitSuffix)
     EXPECT_STREQ(tok.value.c_str(), "1234_km2_s");
 
     std::string test4 = "1234_km_2_kg";
+    std::istringstream ssin4{test4};
+    
+    NikolaLexer lexer4{ssin4};
+    tok = lexer4.nextToken();
+
+    EXPECT_EQ(tok.startCol, 1);
+    EXPECT_EQ(tok.endCol, 12);
+    EXPECT_EQ(tok.line, 1);
+    EXPECT_EQ(tok.kind, NikolaTokenKind::NikolaIntegerLiteral);
+    EXPECT_STREQ(tok.value.c_str(), "1234_km_2_kg");
 
     std::string test5 = "1234LL_km_2_kg3";
+    std::istringstream ssin5{test5};
+    
+    NikolaLexer lexer5{ssin5};
+    tok = lexer5.nextToken();
+
+    EXPECT_EQ(tok.startCol, 1);
+    EXPECT_EQ(tok.endCol, 15);
+    EXPECT_EQ(tok.line, 1);
+    EXPECT_EQ(tok.kind, NikolaTokenKind::NikolaIntegerLiteral);
+    EXPECT_STREQ(tok.value.c_str(), "1234LL_km_2_kg3");
 }

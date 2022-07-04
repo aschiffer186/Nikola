@@ -197,6 +197,7 @@ namespace Nikola::FrontEnd::Lexer
                         }
                     }
                 }
+                break;
                 case UNIT_SUFFIX_NEGATIVE_EXPONENT:
                 {
                     char lookahead = tolower(M_input_stream.lookahead());
@@ -204,7 +205,7 @@ namespace Nikola::FrontEnd::Lexer
                     {
                         TRANSITION(UNIT_SUFFIX_NEGATIVE_EXPONENT);
                     }
-                    else if (isalpha(lookahead))
+                    else if (lookahead == '_')
                     {
                         TRANSITION(UNIT_SUFFIX_UNIT);
                     }
