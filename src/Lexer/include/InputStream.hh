@@ -25,6 +25,7 @@ namespace Nikola::FrontEnd::Lexer::_detail
     {
     public:
         using PosType = std::make_unsigned_t<std::char_traits<char>::off_type>;
+        using MarkerType = std::istream::pos_type;
     public:
         static constexpr char NIKOLA_EOF = std::char_traits<char>::eof();
     public:
@@ -37,7 +38,7 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * @pre the inputStream is open and non in an error-state
          * @param inputStream the input stream to be encapsulated by *this
          */
-        explicit InputStream(const std::istream& inputStream);
+        explicit InputStream(std::istream& inputStream);
 
         /**
          * @brief Returns the current character
@@ -87,14 +88,18 @@ namespace Nikola::FrontEnd::Lexer::_detail
          * @return PosType the current line
          */
         PosType getLine() const;
+
+        MarkerType getPos() const;
+
+        void setPos(MarkerType pos);
     private:
         //Implementation of operator++()
         void advance();
     private:
         static constexpr std::istreambuf_iterator<char, std::char_traits<char>> END{};
     private:
-        std::basic_streambuf<char, std::char_traits<char>> *M_buff;
-        std::istreambuf_iterator<char, std::char_traits<char>> M_iter;
+        char M_curr;
+        std::istream& M_stream;
         PosType M_line;
         PosType M_col;
     };

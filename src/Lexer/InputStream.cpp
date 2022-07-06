@@ -2,17 +2,15 @@
 
 namespace Nikola::FrontEnd::Lexer::_detail {
     
-    InputStream::InputStream(const std::istream& inputStream)
-    : M_buff{inputStream.rdbuf()}, M_iter{inputStream.rdbuf()}, M_line{1}, M_col{1}
+    InputStream::InputStream(std::istream& inputStream)
+    : M_curr{NIKOLA_EOF}, M_stream{inputStream}, M_col{1}, M_line{1}
     {
 
     }
 
     char InputStream::operator*()
     {
-        if (M_iter == END)
-            return NIKOLA_EOF;
-        return *M_iter;
+        return M_curr;
     }
 
     InputStream& InputStream::operator++()
@@ -23,9 +21,7 @@ namespace Nikola::FrontEnd::Lexer::_detail {
 
     char InputStream::lookahead()
     {
-        char c = M_buff->snextc();
-        M_buff->sungetc();
-        return c;
+        return M_stream.peek();
     }
 
     InputStream::PosType InputStream::getCol() const
@@ -42,18 +38,31 @@ namespace Nikola::FrontEnd::Lexer::_detail {
     {
         while(true)
         {
-            if (M_iter == END)
+            if (M_stream.eof())
+            {
+                M_curr = NIKOLA_EOF;
                 return;
-            ++M_iter;
+            }
+            M_curr = M_stream.get();
             ++M_col;
-            if (*M_iter == '\n')
+            if (M_curr == '\n')
             {
                 M_col = 1;
                 ++M_line;
-                ++M_iter;
+                M_curr = M_stream.get();
             }
-            if (!isspace(*M_iter))
+            if (!isspace(M_curr))
                 return;
         }
+    }
+
+    InputStream::MarkerType InputStream::getPos() const
+    {
+        return M_stream.tellg();
+    } 
+
+    void InputStream::setPos(InputStream::MarkerType pos)
+    {
+        M_stream.seekg(pos);
     }
 }

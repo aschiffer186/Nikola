@@ -11,7 +11,7 @@ namespace Nikola::FrontEnd::Lexer
     class NikolaLexer
     {
     public:
-        explicit NikolaLexer(const std::istream& in);
+        explicit NikolaLexer(std::istream& in);
 
         NikolaToken nextToken();
 

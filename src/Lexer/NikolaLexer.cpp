@@ -23,7 +23,7 @@
 
 namespace Nikola::FrontEnd::Lexer
 {
-    NikolaLexer::NikolaLexer(const std::istream& in)
+    NikolaLexer::NikolaLexer(std::istream& in)
     : M_input_stream{in}
     {
 
@@ -162,6 +162,7 @@ namespace Nikola::FrontEnd::Lexer
                         ACCEPT(NikolaTokenKind::NikolaRealLiteral);
                     }
                 }
+                break;
                 break;
                 case UNIT_SUFFIX_BEGIN:
                 {
